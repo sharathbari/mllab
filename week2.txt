@@ -1,0 +1,28 @@
+import pandas
+from sklearn import tree
+import pydotplus
+from sklearn.tree import DecisionTreeClassifier
+import matplotlib.pyplot as plt
+import matplotlib.image as pltimg
+df = pandas.read_csv("playtennis.csv")
+d = {'Sunny': 0, 'Overcast': 1, 'Rain': 2}
+df['Outlook'] = df['Outlook'].map(d)
+d = {'Hot': 0, 'Mild': 1,'Cool': 2}
+df['Temperature'] = df['Temperature'].map(d)
+d = {'High': 0, 'Normal': 1}
+df['Humidity'] = df['Humidity'].map(d)
+d = {'Weak': 0, 'Strong': 1}
+df['Wind'] = df['Wind'].map(d)
+d = {'No': 0, 'Yes': 1}
+df['PlayTennis'] = df['PlayTennis'].map(d)
+features = ['Outlook', 'Temperature', 'Humidity', 'Wind']
+X = df[features]
+y = df['PlayTennis']
+dtree = DecisionTreeClassifier(criterion="entropy")
+dtree = dtree.fit(X, y)
+data = tree.export_graphviz(dtree, out_file=None, feature_names=features)
+graph = pydotplus.graph_from_dot_data(data)
+graph.write_png('mydecisiontree.png')
+img=pltimg.imread('mydecisiontree.png')
+imgplot = plt.imshow(img)
+plt.show()
